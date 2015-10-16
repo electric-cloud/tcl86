@@ -1884,7 +1884,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 		], [AS_IF([test "$arch" = "amd64 i386"], [
 		    AS_IF([test "$GCC" = yes], [
 			case $system in
-			    SunOS-5.1[[1-9]]*|SunOS-5.[[2-9]][[0-9]]*)
+			    SunOS-5.1[[0-9]]*|SunOS-5.[[2-9]][[0-9]]*)
 				do64bit_ok=yes
 				CFLAGS="$CFLAGS -m64"
 				LDFLAGS="$LDFLAGS -m64";;

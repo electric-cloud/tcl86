@@ -1938,7 +1938,7 @@ PipeClose2Proc(
 		 */
 
 		if (WaitForSingleObject(pipePtr->readThread,
-			20) == WAIT_TIMEOUT) {
+			INFINITE) == WAIT_TIMEOUT) {
 		    /*
 		     * The thread must be blocked waiting for the pipe to
 		     * become readable in ReadFile(). There isn't a clean way
@@ -1956,6 +1956,11 @@ PipeClose2Proc(
 		    Tcl_MutexLock(&pipeMutex);
 
 		    /* BUG: this leaks memory */
+                    /* BUG: this can leave a critical section locked
+                     * with no thread owning it, making it really freaking
+                     * difficult for anyone to figure out why a program
+                     * is locking up.
+                     */
 		    TerminateThread(pipePtr->readThread, 0);
 		    Tcl_MutexUnlock(&pipeMutex);
 		}
@@ -2006,7 +2011,7 @@ PipeClose2Proc(
 		 */
 
 		if (WaitForSingleObject(pipePtr->writeThread,
-			20) == WAIT_TIMEOUT) {
+                                INFINITE) == WAIT_TIMEOUT) {
 		    /*
 		     * The thread must be blocked waiting for the pipe to
 		     * consume input in WriteFile(). There isn't a clean way
@@ -2024,6 +2029,11 @@ PipeClose2Proc(
 		    Tcl_MutexLock(&pipeMutex);
 
 		    /* BUG: this leaks memory */
+                    /* BUG: this can leave a critical section locked
+                     * with no thread owning it, making it really freaking
+                     * difficult for anyone to figure out why a program
+                     * is locking up.
+                     */
 		    TerminateThread(pipePtr->writeThread, 0);
 		    Tcl_MutexUnlock(&pipeMutex);
 		}

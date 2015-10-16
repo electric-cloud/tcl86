@@ -539,7 +539,7 @@ ConsoleCloseProc(
 	     * Wait at most 20 milliseconds for the reader thread to close.
 	     */
 
-	    if (WaitForSingleObject(consolePtr->readThread, 20)
+	    if (WaitForSingleObject(consolePtr->readThread, INFINITE)
 		    == WAIT_TIMEOUT) {
 		/*
 		 * Forcibly terminate the background thread as a last resort.
@@ -551,6 +551,11 @@ ConsoleCloseProc(
 		Tcl_MutexLock(&consoleMutex);
 
 		/* BUG: this leaks memory. */
+                /* BUG: this can leave a critical section locked
+                 * with no thread owning it, making it really freaking
+                 * difficult for anyone to figure out why a program
+                 * is locking up.
+                 */
 		TerminateThread(consolePtr->readThread, 0);
 		Tcl_MutexUnlock(&consoleMutex);
 	    }
@@ -600,7 +605,7 @@ ConsoleCloseProc(
 	     * Wait at most 20 milliseconds for the writer thread to close.
 	     */
 
-	    if (WaitForSingleObject(consolePtr->writeThread, 20)
+	    if (WaitForSingleObject(consolePtr->writeThread, INFINITE)
 		    == WAIT_TIMEOUT) {
 		/*
 		 * Forcibly terminate the background thread as a last resort.
@@ -612,6 +617,11 @@ ConsoleCloseProc(
 		Tcl_MutexLock(&consoleMutex);
 
 		/* BUG: this leaks memory. */
+                /* BUG: this can leave a critical section locked
+                 * with no thread owning it, making it really freaking
+                 * difficult for anyone to figure out why a program
+                 * is locking up.
+                 */
 		TerminateThread(consolePtr->writeThread, 0);
 		Tcl_MutexUnlock(&consoleMutex);
 	    }

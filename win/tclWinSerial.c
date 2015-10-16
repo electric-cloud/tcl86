@@ -643,7 +643,7 @@ SerialCloseProc(
 	     */
 
 	    if (WaitForSingleObject(serialPtr->writeThread,
-		    20) == WAIT_TIMEOUT) {
+		    INFINITE) == WAIT_TIMEOUT) {
 		/*
 		 * Forcibly terminate the background thread as a last resort.
 		 * Note that we need to guard against terminating the thread
@@ -654,6 +654,11 @@ SerialCloseProc(
 		Tcl_MutexLock(&serialMutex);
 
 		/* BUG: this leaks memory */
+                /* BUG: this can leave a critical section locked
+                 * with no thread owning it, making it really freaking
+                 * difficult for anyone to figure out why a program
+                 * is locking up.
+                 */
 		TerminateThread(serialPtr->writeThread, 0);
 
 		Tcl_MutexUnlock(&serialMutex);

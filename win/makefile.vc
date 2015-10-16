@@ -441,7 +441,7 @@ cdebug	=
 !if $(SYMBOLS)
 cdebug	= $(cdebug) -Zi
 !endif
-!else if "$(MACHINE)" == "IA64" || "$(MACHINE)" == "AMD64"
+!else if "$(MACHINE)" == "IA64" || "$(MACHINE)" == "AMD64" || "$(MACHINE)" == "X64"
 ### Warnings are too many, can't support warnings into errors.
 cdebug	= -Zi -Od $(DEBUGFLAGS)
 !else
@@ -515,7 +515,7 @@ guilflags = $(lflags) -subsystem:windows
 baselibs   = kernel32.lib user32.lib ws2_32.lib
 # Avoid 'unresolved external symbol __security_cookie' errors.
 # c.f. http://support.microsoft.com/?id=894573
-!if "$(MACHINE)" == "IA64" || "$(MACHINE)" == "AMD64"
+!if "$(MACHINE)" == "IA64" || "$(MACHINE)" == "AMD64" || "$(MACHINE)" == "X64"
 !if $(VCVERSION) > 1399 && $(VCVERSION) < 1500
 baselibs   = $(baselibs) bufferoverflowU.lib
 !endif
@@ -1058,22 +1058,14 @@ install-binaries:
 #" emacs fix
 
 install-libraries: tclConfig install-msgs install-tzdata
-	@if not exist "$(SCRIPT_INSTALL_DIR)$(NULL)" \
-		$(MKDIR) "$(SCRIPT_INSTALL_DIR)"
-	@if not exist "$(SCRIPT_INSTALL_DIR)\..\tcl8$(NULL)" \
-		$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8"
-	@if not exist "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.2$(NULL)" \
-		$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.2"
-	@if not exist "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.3$(NULL)" \
-		$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.3"
-	@if not exist "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.4$(NULL)" \
-		$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.4"
-	@if not exist "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.4\platform$(NULL)" \
-		$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.4\platform"
-	@if not exist "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.5$(NULL)" \
-		$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.5"
-	@if not exist "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.6$(NULL)" \
-		$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.6"
+	-$(MKDIR) "$(SCRIPT_INSTALL_DIR)"
+	-$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8"
+	-$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.2"
+	-$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.3"
+	-$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.4"
+	-$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.4\platform"
+	-$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.5"
+	-$(MKDIR) "$(SCRIPT_INSTALL_DIR)\..\tcl8\8.6"
 	@echo Installing header files
 	@$(CPY) "$(GENERICDIR)\tcl.h"             "$(INCLUDE_INSTALL_DIR)\"
 	@$(CPY) "$(GENERICDIR)\tclDecls.h"        "$(INCLUDE_INSTALL_DIR)\"

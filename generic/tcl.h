@@ -380,7 +380,9 @@ typedef struct stat	Tcl_StatBuf;
 typedef struct stati64 Tcl_StatBuf;
 #         define TCL_LL_MODIFIER	"L"
 #      else /* __BORLANDC__ */
-#         if _MSC_VER < 1400 || !defined(_M_IX86)
+/* Was: */
+/* #         if _MSC_VER < 1400 || !defined(_M_IX86) */
+#         if _MSC_VER < 1400
 typedef struct _stati64	Tcl_StatBuf;
 #         else
 typedef struct _stat64	Tcl_StatBuf;
